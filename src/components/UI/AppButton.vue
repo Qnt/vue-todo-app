@@ -25,6 +25,7 @@ const { variant = 'primary' } = defineProps<{
   text-transform: uppercase;
   font-weight: 700;
   width: 100%;
+  text-align: center;
 }
 
 .primary {

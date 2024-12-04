@@ -3,7 +3,7 @@ import { onUnmounted, provide, ref } from 'vue'
 import TodoForm from './components/TodoForm.vue'
 import TodoList from './components/TodoList.vue'
 import type { Todo, TodoNotification } from './types'
-import { toggleTodoStatusKey } from './keys'
+import { removeTodoKey, toggleTodoStatusKey } from './keys'
 import TodoFooter from './components/TodoFooter.vue'
 import AppNotification from './components/UI/AppNotification.vue'
 
@@ -45,11 +45,16 @@ function toggleTodoStatus(id: Todo['id']) {
   todos.value = todos.value.map((todo) => (id === todo.id ? { ...todo, done: !todo.done } : todo))
 }
 
+function removeTodo(id: Todo['id']) {
+  todos.value = todos.value.filter((todo) => id !== todo.id)
+}
+
 function removeDoneTodos() {
   todos.value = todos.value.filter((todo) => !todo.done)
 }
 
 provide(toggleTodoStatusKey, toggleTodoStatus)
+provide(removeTodoKey, removeTodo)
 
 onUnmounted(() => {
   if (notificationTimeoutId) {
