@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { onUnmounted, provide, ref } from 'vue'
 import TodoForm from './components/TodoForm.vue'
 import TodoList from './components/TodoList.vue'
 import type { Todo, TodoNotification } from './types'
@@ -9,8 +9,12 @@ import AppNotification from './components/UI/AppNotification.vue'
 
 const todos = ref<Todo[]>([])
 const additionStatus = ref<TodoNotification>()
+let notificationTimeoutId: number
 
 function addTodo(title: Todo['title']) {
+  if (notificationTimeoutId) {
+    clearTimeout(notificationTimeoutId)
+  }
   if (!title.trim()) {
     additionStatus.value = {
       success: false,
@@ -25,7 +29,7 @@ function addTodo(title: Todo['title']) {
     additionStatus.value = { success: true, message: 'New todo successfully added.' }
   }
 
-  setTimeout(() => (additionStatus.value = undefined), 2000)
+  notificationTimeoutId = setTimeout(() => (additionStatus.value = undefined), 2000)
 }
 
 function toggleTodoStatus(id: Todo['id']) {
@@ -37,11 +41,17 @@ function removeDoneTodos() {
 }
 
 provide(toggleTodoStatusKey, toggleTodoStatus)
+
+onUnmounted(() => {
+  if (notificationTimeoutId) {
+    clearTimeout(notificationTimeoutId)
+  }
+})
 </script>
 
 <template>
   <main class="wrapper">
-    <h2>Vue Todo App</h2>
+    <h2 class="header">Vue Todo App</h2>
     <TodoForm :addition-status="additionStatus" @add="addTodo" />
     <TodoList :todos="todos" />
     <TodoFooter v-if="todos.length" :todos="todos" @remove-done-todos="removeDoneTodos" />
@@ -56,5 +66,11 @@ provide(toggleTodoStatusKey, toggleTodoStatus)
   gap: 1rem;
   flex-basis: 400px;
   padding: 1rem;
+}
+
+.header {
+  font-size: 2rem;
+  text-align: center;
+  font-weight: 700;
 }
 </style>
