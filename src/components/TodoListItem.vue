@@ -24,9 +24,9 @@ const removeTodo = inject(removeTodoKey) as (id: Todo['id']) => void
       @click="toggleTodoStatus(todo.id)"
     />
     <p class="todo-item__title" :class="{ done: done }">{{ todo.title }}</p>
-    <AppButton variant="danger" class="todo-item__button-delete" @click="removeTodo(todo.id)"
-      >x</AppButton
-    >
+    <AppButton variant="danger" class="todo-item__button-delete" @click="removeTodo(todo.id)">
+      x
+    </AppButton>
   </AppCard>
 </template>
 

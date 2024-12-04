@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, provide, ref } from 'vue'
+import { onUnmounted, provide, ref, watchEffect } from 'vue'
 import TodoForm from './components/TodoForm.vue'
 import TodoList from './components/TodoList.vue'
 import type { Todo, TodoNotification } from './types'
@@ -7,9 +7,10 @@ import { removeTodoKey, toggleTodoStatusKey } from './keys'
 import TodoFooter from './components/TodoFooter.vue'
 import AppNotification from './components/UI/AppNotification.vue'
 
-const todos = ref<Todo[]>([])
-const additionStatus = ref<TodoNotification>()
 let notificationTimeoutId: number
+const STORAGE_KEY = 'vue_todo_storage'
+const todos = ref<Todo[]>(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]'))
+const additionStatus = ref<TodoNotification>()
 
 function isTodoWithSameTitleExists(title: Todo['title']) {
   return todos.value.some((todo) => todo.title === title)
@@ -55,6 +56,10 @@ function removeDoneTodos() {
 
 provide(toggleTodoStatusKey, toggleTodoStatus)
 provide(removeTodoKey, removeTodo)
+
+watchEffect(() => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos.value))
+})
 
 onUnmounted(() => {
   if (notificationTimeoutId) {
