@@ -8,14 +8,16 @@ defineProps<{
   todo: Todo
 }>()
 
+const done = defineModel<Todo['done']>('done', { required: true })
+
 const toggleTodoStatus = inject(toggleTodoStatusKey) as (id: Todo['id']) => void
 </script>
 
 <template>
   <AppCard class="todo-item">
-    <p class="todo-item__title" :class="{ done: todo.done }">{{ todo.title }}</p>
+    <p class="todo-item__title" :class="{ done: done }">{{ todo.title }}</p>
     <input
-      :value="todo.done"
+      v-model="done"
       class="todo-item__checkbox"
       type="checkbox"
       @click="toggleTodoStatus(todo.id)"
@@ -27,6 +29,7 @@ const toggleTodoStatus = inject(toggleTodoStatusKey) as (id: Todo['id']) => void
 .todo-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .todo-item__title {

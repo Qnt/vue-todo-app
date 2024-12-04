@@ -28,7 +28,12 @@ const filteredTodos = computed(() => {
 <template>
   <template v-if="todos.length">
     <AppFilter v-model="curFilter" :filters="filters" />
-    <TodoListItem v-for="todo in filteredTodos" :key="todo.id" :todo="todo" />
+    <TodoListItem
+      v-for="todo in filteredTodos"
+      :key="todo.id"
+      v-model:done="todo.done"
+      :todo="todo"
+    />
   </template>
   <AppCard v-else class="center">Nothing to do!</AppCard>
 </template>

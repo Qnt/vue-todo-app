@@ -11,6 +11,10 @@ const todos = ref<Todo[]>([])
 const additionStatus = ref<TodoNotification>()
 let notificationTimeoutId: number
 
+function isTodoWithSameTitleExists(title: Todo['title']) {
+  return todos.value.some((todo) => todo.title === title)
+}
+
 function addTodo(title: Todo['title']) {
   if (notificationTimeoutId) {
     clearTimeout(notificationTimeoutId)
@@ -20,9 +24,14 @@ function addTodo(title: Todo['title']) {
       success: false,
       errors: [{ message: 'Text cannot be empty.' }],
     }
+  } else if (isTodoWithSameTitleExists(title)) {
+    additionStatus.value = {
+      success: false,
+      errors: [{ message: 'A todo with the same title already exists.' }],
+    }
   } else {
     todos.value.push({
-      id: todos.value.length ? todos.value.length + 1 : 1,
+      id: crypto.randomUUID(),
       title,
       done: false,
     })
