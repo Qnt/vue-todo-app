@@ -8,7 +8,7 @@ export type TodoError = {
   message: string
 }
 
-export type TodoResponse = {
+export type TodoNotification = {
   success: boolean
   message?: string
   errors?: Array<TodoError>

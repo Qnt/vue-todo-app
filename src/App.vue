@@ -2,12 +2,13 @@
 import { provide, ref } from 'vue'
 import TodoForm from './components/TodoForm.vue'
 import TodoList from './components/TodoList.vue'
-import type { Todo, TodoResponse } from './types'
+import type { Todo, TodoNotification } from './types'
 import { toggleTodoStatusKey } from './keys'
 import TodoFooter from './components/TodoFooter.vue'
+import AppNotification from './components/UI/AppNotification.vue'
 
 const todos = ref<Todo[]>([])
-const additionStatus = ref<TodoResponse>()
+const additionStatus = ref<TodoNotification>()
 
 function addTodo(title: Todo['title']) {
   if (!title.trim()) {
@@ -43,7 +44,8 @@ provide(toggleTodoStatusKey, toggleTodoStatus)
     <h2>Vue Todo App</h2>
     <TodoForm :addition-status="additionStatus" @add="addTodo" />
     <TodoList :todos="todos" />
-    <TodoFooter :todos="todos" @remove-done-todos="removeDoneTodos" />
+    <TodoFooter v-if="todos.length" :todos="todos" @remove-done-todos="removeDoneTodos" />
+    <AppNotification :notification="additionStatus" />
   </main>
 </template>
 
